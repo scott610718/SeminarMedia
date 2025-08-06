@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國三資科課程分享：多媒體專題 (Gemini AI 整合版)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-color: #00ffff; /* 亮青色 */
+            --secondary-color: #ff00ff; /* 洋紅色 */
+            --background-color-start: #0a0f1a;
+            --background-color-end: #1a233a;
+            --text-color: #e0e0e0;
+            --card-background: rgba(20, 30, 50, 0.7);
+            --glow-color: rgba(0, 255, 255, 0.5);
+            --border-color: rgba(0, 255, 255, 0.3);
+        }
+
+        /* 背景與基本動畫 */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, var(--background-color-start), var(--background-color-end), var(--background-color-start));
+            background-size: 200% 200%;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            animation: gradientAnimation 20s ease infinite;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        /* 標題與文字樣式 */
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            text-shadow: 0 0 15px var(--primary-color);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-color);
+            text-shadow: 0 0 8px var(--glow-color);
+        }
+
+        h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); }
+        h2 { font-size: clamp(1.8rem, 4vw, 2rem); border-left: 5px solid var(--secondary-color); padding-left: 15px; margin-top: 3rem; margin-bottom: 1.5rem; }
+        h3 { font-size: clamp(1.3rem, 3vw, 1.5rem); color: var(--secondary-color); margin-top: 2rem; }
+        
+        .header-meta {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+
+        /* 卡片式佈局 */
+        .card {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7), 0 0 25px var(--glow-color), inset 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+
+        /* 列表樣式 */
+        ul, ol {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            padding-left: 1.5em;
+            text-indent: -1.5em;
+            margin-bottom: 0.8em;
+            line-height: 1.6;
+        }
+
+        li::before {
+            content: '»';
+            color: var(--secondary-color);
+            font-weight: bold;
+            margin-right: 0.8em;
+            transition: color 0.3s ease;
+        }
+        
+        li:hover::before {
+            color: var(--primary-color);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .image-container {
+            width: 100%;
+            margin: 2rem 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            border-left: 3px solid var(--secondary-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            font-style: italic;
+            color: #ccc;
+        }
+        
+        /* 互動式圖表樣式 */
+        .chart-container { text-align: center; }
+        .chart-toggle {
+            display: inline-block;
+            cursor: pointer;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .chart-toggle:hover, .chart-toggle.active {
+            background: var(--primary-color);
+            color: var(--background-color-start);
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+        .chart-content { display: none; margin-top: 1.5rem; text-align: left; }
+        .chart-content.active { display: block; animation: fadeIn 0.5s ease; }
+        
+        /* Gemini AI 功能樣式 */
+        #gemini-generator-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--secondary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        #gemini-generator-btn:hover:not(:disabled) {
+            box-shadow: 0 0 15px var(--secondary-color);
+            filter: brightness(1.2);
+        }
+        #gemini-generator-btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        #gemini-topic-input, #gemini-api-key-input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            box-sizing: border-box; /* 確保 padding 不會影響寬度 */
+        }
+        #gemini-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 5px;
+            border-left: 3px solid var(--primary-color);
+            white-space: pre-wrap; /* 保持換行 */
+            line-height: 1.8;
+        }
+        
+        /* 互動測驗樣式 */
+        #quiz-container { padding: 2rem; }
+        #question { font-size: 1.5rem; margin-bottom: 1.5rem; }
+        #options-container button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            text-align: left;
+            background: var(--card-background);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        #options-container button:hover:not([disabled]) {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+        #options-container button.correct { background-color: rgba(0, 255, 0, 0.2); border-color: #0f0; }
+        #options-container button.incorrect { background-color: rgba(255, 0, 0, 0.2); border-color: #f00; }
+        #next-btn, #restart-btn {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--secondary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        #next-btn { float: right; }
+        #next-btn:hover, #restart-btn:hover { box-shadow: 0 0 15px var(--secondary-color); filter: brightness(1.2); }
+        
+        #results-container { display: none; text-align: center; }
+        #stats-container {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .stat-bar { background-color: #333; border-radius: 5px; margin: 10px 0; overflow: hidden; text-align: left; }
+        .stat-bar-fill {
+            height: 30px;
+            line-height: 30px;
+            padding-left: 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            color: var(--background-color-start);
+            font-weight: bold;
+            transition: width 0.5s ease-in-out;
+        }
+        .correct-bar { background: linear-gradient(90deg, #00aaff, var(--primary-color)); }
+        .incorrect-bar { background: linear-gradient(90deg, #d400d4, var(--secondary-color)); }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>國三資科課程分享：多媒體專題</h1>
+            <p class="header-meta">主講：洪錦男老師 | 南投縣科技輔導團共備研習 | 日期：114.08.20</p>
+        </header>
+
+        <main>
+            <section id="outline">
+                <h2>課程大綱</h2>
+                <div class="card">
+                    <ol>
+                        <li>課程規劃說明</li>
+                        <li>影音格式與使用軟體</li>
+                        <li>專題實作：幻燈片影片製作</li>
+                        <li>專題實作：片頭片尾與特效</li>
+                        <li>✨ AI 專題點子生成器 (Gemini)</li>
+                        <li>專題實作：成品完善與發布</li>
+                        <li>結語</li>
+                        <li>CANVA英文版的classwork</li>
+                        <li>CANVA使用功能說明</li>
+                        <li>好用的AI影片工具</li>
+                    </ol>
+                </div>
+            </section>
+            
+            <section id="planning">
+                <h2>一、課程規劃說明</h2>
+                <div class="card">
+                    <h3>學習表現與內容 (康軒版第一單元)</h3>
+                    <ul>
+                        <li><strong>運t-Ⅳ-1:</strong> 能了解資訊系統的基本組成架構與運算原理</li>
+                        <li><strong>運c-Ⅳ-3:</strong> 能應用資訊科技與他人合作進行數位創作</li>
+                        <li><strong>運p-Ⅳ-2:</strong> 能利用資訊科技與他人進行有效的互動</li>
+                        <li><strong>運a-Ⅳ-3:</strong> 能具備探索資訊科技之興趣，不受性別限制</li>
+                        <li><strong>資H-Ⅳ-6:</strong> 資訊科技對人類生活之影響</li>
+                        <li><strong>資T-Ⅳ-2:</strong> 資訊科技應用專題</li>
+                    </ul>
+                    <hr style="border-color: var(--border-color); margin: 2rem 0;">
+                    
+                    <h3>多媒體專題設計優缺點分析</h3>
+                    <div class="chart-container">
+                        <button class="chart-toggle active" onclick="toggleChart('pros')">優點</button>
+                        <button class="chart-toggle" onclick="toggleChart('cons')">缺點</button>
+                    </div>
+                    
+                    <div id="pros" class="chart-content active">
+                        <h4>優點 (Advantages)</h4>
+                        <ul>
+                            <li><strong>畢業紀念冊:</strong> 畢業影片可作為畢業紀念冊的珍貴參考，整理回憶，留下珍貴紀錄。</li>
+                            <li><strong>多媒體技能:</strong> 學習多媒體剪輯實用技巧，提升專業能力。</li>
+                            <li><strong>數位敘事:</strong> 培養學生表達技巧與珍貴回憶。</li>
+                        </ul>
+                    </div>
+                    <div id="cons" class="chart-content">
+                        <h4>缺點 (Disadvantages) & 解決方案</h4>
+                        <ul>
+                           <li><strong>小組不平衡:</strong> 分組則變成少數人完成，影響團隊合作。</li>
+                           <li><strong>設備限制:</strong> 設備及軟體影響效率。</li>
+                           <li><strong>編輯不一致:</strong> 編輯水準不一，需規定細節以確保一致性。</li>
+                           <li><strong>影像挑戰:</strong> 參考影像不易取得，影響影片品質。</li>
+                           <li><strong>解決方案:</strong> 提供範例、評分標準、小組任務分配，確保每位學生參與。</li>
+                        </ul>
+                    </div>
+                    
+                    <hr style="border-color: var(--border-color); margin: 2rem 0;">
+                    <h3>課程架構與資源 (5節)</h3>
+                    <p>課程採用混合式學習模式，結合實體課堂與線上資源，包含理論講解與實務操作。課程設計以專題導向學習為核心，從基礎知識到實際應用，逐步建構學生的多媒體創作能力。</p>
+                </div>
+            </section>
+            
+            <section id="software">
+                <h2>二、影音格式與使用軟體</h2>
+                <div class="card">
+                    <h3>影片格式概述</h3>
+                    <p>教學重點在於了解檔案格式與輸出品質的關係，並為不同平台上傳選擇適合的格式。</p>
+                    <ul>
+                        <li><strong>H.264:</strong> 高效能，廣泛支援</li>
+                        <li><strong>MPEG-4:</strong> 適用於網路傳輸</li>
+                        <li><strong>WMV:</strong> Windows系統常用</li>
+                    </ul>
+                </div>
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>Shotcut 剪輯軟體</h3>
+                        <strong>優點:</strong>
+                        <ul>
+                            <li>免費開源，無需購買授權</li>
+                            <li>介面相似威力導演等商業軟體</li>
+                            <li>功能完整可即時預覽</li>
+                            <li>跨平台支援 Windows/Mac/Linux</li>
+                        </ul>
+                        <strong>挑戰:</strong>
+                        <ul>
+                            <li>學生常分不清專案與匯出概念</li>
+                            <li>缺乏可直接使用的素材資源</li>
+                            <li>功能多需循序漸進熟悉</li>
+                            <li>硬體效能需求可能影響體驗</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>CANVA 線上設計平台</h3>
+                        <strong>教學優勢:</strong>
+                        <ul>
+                            <li>線上軟體無須安裝，減少技術障礙</li>
+                            <li>可分享共編，促進協作學習</li>
+                            <li>資源豐富，提供大量模板與素材</li>
+                            <li>具AI功能且擴充多元</li>
+                        </ul>
+                        <strong>注意事項:</strong>
+                        <ul>
+                            <li>需要穩定網路連線</li>
+                            <li>影片剪輯功能相對基礎</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="implementation">
+                <h2>三、四、專題實作流程</h2>
+                <div class="card">
+                    <h3>Part 1: 幻燈片影片製作</h3>
+                    <ul>
+                        <li><strong>素材收集與準備:</strong> 挑選至少10張有意義的照片。</li>
+                        <li><strong>AI工具應用:</strong> 也可利用AI工具如ChatGPT、Bing、Gemini等進行照片去背或修改校景。</li>
+                        <li><strong>製作基礎:</strong> 將處理好的照片放入影片軌道，調整時間軸與轉場效果。</li>
+                        <li><strong>添加字幕:</strong> 在字幕軌道中加入說明文字，設計適合的字體與動畫效果。</li>
+                    </ul>
+                    <div class="image-container">
+                        <img src="https://storage.googleapis.com/maker-media-tool-prod/media/u/2024-07-29/58581a95-654e-4f7f-8c7e-ebc77d446927" alt="">
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Part 2: 片頭片尾與特效</h3>
+                     <ul>
+                        <li><strong>動畫與特效整合:</strong> 設計吸引人的片頭與片尾 (可使用現成模板或AI生成)。</li>
+                        <li><strong>AI主播影片:</strong> 使用Vidnoz等工具產生專業播報影片。</li>
+                        <li><strong>畫面層次:</strong> 運用子母畫面技巧增添層次感。</li>
+                        <li><strong>視覺流暢度:</strong> 加入過場動畫提升觀看體驗。</li>
+                    </ul>
+                    <p><strong>注意：</strong>ai.dev等某些工具可能不適合讓學生直接使用，教師需提前篩選合適的工具。</p>
+                </div>
+            </section>
+
+            <!-- Gemini API Feature Section -->
+            <section id="gemini-feature">
+                <h2>五、✨ AI 專題點子生成器 (Gemini)</h2>
+                <div class="card">
+                    <h3>靈感枯竭了嗎？讓 AI 助你一臂之力！</h3>
+                    <p>請在下方輸入你的影片主題，並貼上你的 Google AI Studio API Key，Gemini AI 將會為你生成獨一無二的專題點子！</p>
+                    <input type="text" id="gemini-topic-input" placeholder="請在此輸入影片主題...">
+                    <input type="password" id="gemini-api-key-input" placeholder="請在此貼上您的 Google AI Studio API Key">
+                    <button id="gemini-generator-btn">
+                        <span>生成專題點子</span>
+                    </button>
+                    <div id="gemini-result" style="display: none;"></div>
+                </div>
+            </section>
+
+            <section id="finalizing">
+                 <h2>六、專題實作：成品完善與發布</h2>
+                 <div class="card">
+                    <ul>
+                        <li><strong>配樂與音訊處理:</strong> 加入背景音樂，調整音量平衡，或利用AI將文字轉為語音旁白。</li>
+                        <li><strong>整合與輸出:</strong> 串聯所有元素，添加過場動畫，選擇合適格式進行影片輸出。</li>
+                        <li><strong>發布與分享:</strong> 講解YouTube上傳方式，鼓勵學生展示成果。</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="conclusion-tools">
+                <h2>七、結語 & 十、好用的AI影片工具</h2>
+                 <div class="grid-container">
+                    <div class="card">
+                        <h3>結語：教學抉擇</h3>
+                        <ul>
+                           <li>分組 V.S. 個人</li>
+                           <li>幻燈片 V.S. 影片</li>
+                           <li>發表 V.S. 作業</li>
+                        </ul>
+                   </div>
+                   <div class="card">
+                        <h3>好用的AI影片工具</h3>
+                        <ul>
+                            <li><strong>Vids:</strong> 需要私人帳號且介面為英文才有avatar和gemini功能。</li>
+                            <li><strong>Bing:</strong> 提供免費AI生成影片功能。</li>
+                            <li><strong>Veo3:</strong> 功能強大但需付費 (對美國大學生較佳)。</li>
+                            <li><strong>其他:</strong> 豆包、Kling因教育網路限制無法使用。ComfyUI則需高階顯卡。</li>
+                        </ul>
+                   </div>
+                </div>
+            </section>
+            
+             <section id="canva-features">
+                <h2>八 & 九、CANVA 功能應用</h2>
+                <div class="card">
+                    <h3>CANVA Classwork (英文版)</h3>
+                    <p>教師可建立作業並分配給學生完成，方便追蹤進度。</p>
+                    <h3>CANVA 功能亮點</h3>
+                    <ul>
+                       <li><strong>圖片編修:</strong> 內建強大的圖片編輯功能。</li>
+                       <li><strong>字幕與語音互轉:</strong> 支援AI語音生成字幕，也能將字幕轉換為AI語音旁白。</li>
+                       <li><strong>AI影片生成:</strong> 將使用者設定改為英文，即可使用AI生成影片。</li>
+                    </ul>
+                    <div class="code-block">
+                        <strong>AI影片生成範例提示詞：</strong>
+                        <p>"韓國高中學生穿制服在早晨陽光普照時走入校門"</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="interactive-quiz">
+                <h2>互動學習測驗</h2>
+                <div class="card">
+                    <div id="quiz-container">
+                        <div id="question-wrapper">
+                            <h3 id="question">問題載入中...</h3>
+                        </div>
+                        <div id="options-container">
+                            <!-- 選項將由 JavaScript 動態生成 -->
+                        </div>
+                        <button id="next-btn" style="display: none;">下一題</button>
+                    </div>
+                    <div id="results-container">
+                        <h2>測驗完成！</h2>
+                        <h3>你的最終成績: <span id="final-score"></span></h3>
+                        <div id="stats-container">
+                             <h4>結果統計</h4>
+                             <p>答對題數: <span id="correct-count"></span></p>
+                             <div class="stat-bar">
+                                <div id="correct-bar" class="stat-bar-fill correct-bar" style="width: 0%;"></div>
+                             </div>
+                             <p>答錯題數: <span id="incorrect-count"></span></p>
+                              <div class="stat-bar">
+                                <div id="incorrect-bar" class="stat-bar-fill incorrect-bar" style="width: 0%;"></div>
+                             </div>
+                        </div>
+                        <button id="restart-btn" style="margin-top: 2rem;">重新測驗</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // --- 互動式圖表邏輯 ---
+        function toggleChart(target) {
+            const buttons = document.querySelectorAll('.chart-toggle');
+            buttons.forEach(button => button.classList.remove('active'));
+            document.querySelector(`.chart-toggle[onclick="toggleChart('${target}')"]`).classList.add('active');
+
+            const contents = document.querySelectorAll('.chart-content');
+            contents.forEach(content => content.classList.remove('active'));
+            document.getElementById(target).classList.add('active');
+        }
+        
+        // --- Gemini AI Generator Logic ---
+        const geminiBtn = document.getElementById('gemini-generator-btn');
+        const geminiInput = document.getElementById('gemini-topic-input');
+        const apiKeyInput = document.getElementById('gemini-api-key-input');
+        const geminiResult = document.getElementById('gemini-result');
+
+        geminiBtn.addEventListener('click', async () => {
+            const topic = geminiInput.value.trim();
+            const apiKey = apiKeyInput.value.trim();
+
+            if (!apiKey) {
+                geminiResult.style.display = 'block';
+                geminiResult.textContent = '請先貼上您的 Google AI Studio API Key！';
+                return;
+            }
+
+            if (!topic) {
+                geminiResult.style.display = 'block';
+                geminiResult.textContent = '請先輸入一個影片主題！';
+                return;
+            }
+
+            // 顯示載入中狀態
+            geminiBtn.disabled = true;
+            geminiBtn.innerHTML = '<div class="spinner"></div><span>生成中，請稍候...</span>';
+            geminiResult.style.display = 'none';
+
+            const prompt = `
+                請你扮演一位有創意的影片製作人。針對國中生的多媒體專題，請根據以下主題，發想一個完整的影片點子。
+                主題：「${topic}」
+
+                請用以下格式提供內容，並使用繁體中文：
+                
+                **專案標題：** [這裡是一個響亮且有趣的標題]
+                
+                **腳本大綱：**
+                * 開頭：[描述影片的開頭，如何吸引觀眾]
+                * 中段：[描述影片中間的主要內容或故事]
+                * 結尾：[描述影片的結尾，如何留下深刻印象或呼籲]
+                
+                **場景建議：**
+                * [建議 2-3 個具體的拍攝場景或畫面]
+                
+                **配樂風格建議：** [建議一種或兩種音樂風格，例如：輕快活潑、溫馨感人、史詩氣勢等]
+            `;
+
+            try {
+                // 使用 Gemini API
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API 請求失敗，狀態碼：${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    geminiResult.textContent = text;
+                } else {
+                    throw new Error('從 API 收到的回應格式不正確。');
+                }
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                geminiResult.textContent = `發生錯誤：${error.message}\n請檢查您的 API Key 是否正確，或稍後再試。`;
+            } finally {
+                // 恢復按鈕狀態
+                geminiBtn.disabled = false;
+                geminiBtn.innerHTML = '<span>生成專題點子</span>';
+                geminiResult.style.display = 'block';
+            }
+        });
+
+
+        // --- 互動式測驗邏輯 ---
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionEl = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const quizData = [
+            {
+                question: "根據課程規劃，哪個剪輯軟體是免費開源且跨平台的？",
+                answers: [
+                    { text: "威力導演", correct: false },
+                    { text: "Shotcut", correct: true },
+                    { text: "Canva", correct: false },
+                    { text: "Adobe Premiere", correct: false }
+                ]
+            },
+            {
+                question: "在製作幻燈片影片時，建議至少挑選幾張有意義的照片？",
+                answers: [
+                    { text: "5張", correct: false },
+                    { text: "20張", correct: false },
+                    { text: "10張", correct: true },
+                    { text: "數量不限", correct: false }
+                ]
+            },
+            {
+                question: "下列哪一項是Canva平台的主要『注意事項』？",
+                answers: [
+                    { text: "需要購買昂貴授權", correct: false },
+                    { text: "功能太過複雜", correct: false },
+                    { text: "需要穩定網路連線", correct: true },
+                    { text: "缺乏模板素材", correct: false }
+                ]
+            },
+             {
+                question: "課程中提到哪一個AI工具可以產生專業的『播報影片』？",
+                answers: [
+                    { text: "ChatGPT", correct: false },
+                    { text: "Vidnoz", correct: true },
+                    { text: "Gemini", correct: false },
+                    { text: "Bing", correct: false }
+                ]
+            },
+            {
+                question: "要使用Canva的AI影片生成功能，需要做什麼設定？",
+                answers: [
+                    { text: "付費升級帳號", correct: false },
+                    { text: "安裝特定外掛", correct: false },
+                    { text: "將使用者設定改為英文", correct: true },
+                    { text: "使用教育版帳號", correct: false }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            quizContainer.style.display = 'block';
+            resultsContainer.style.display = 'none';
+            nextBtn.style.display = 'none';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetState();
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionEl.innerText = `Q${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.innerText = answer.text;
+                button.classList.add('option-btn');
+                button.addEventListener('click', () => selectAnswer(button, answer.correct));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            nextBtn.style.display = 'none';
+            while (optionsContainer.firstChild) {
+                optionsContainer.removeChild(optionsContainer.firstChild);
+            }
+        }
+        
+        function selectAnswer(button, isCorrect) {
+            Array.from(optionsContainer.children).forEach(btn => {
+                btn.disabled = true; // 選擇後禁用所有按鈕
+                const answerData = quizData[currentQuestionIndex].answers.find(a => a.text === btn.innerText);
+                if (answerData && answerData.correct) {
+                   btn.classList.add('correct');
+                }
+            });
+            
+            if (!isCorrect) {
+                 button.classList.add('incorrect');
+            }
+
+            if(isCorrect) {
+                score++;
+            }
+
+            if (quizData.length > currentQuestionIndex + 1) {
+                nextBtn.style.display = 'block';
+            } else {
+                // 這是最後一題，延遲一下顯示結果
+                setTimeout(showResults, 1000);
+            }
+        }
+        
+        function showResults() {
+             quizContainer.style.display = 'none';
+             resultsContainer.style.display = 'block';
+             
+             const totalQuestions = quizData.length;
+             const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+             
+             document.getElementById('final-score').innerText = `${percentage}%`;
+             document.getElementById('correct-count').innerText = score;
+             document.getElementById('incorrect-count').innerText = totalQuestions - score;
+             
+             const correctBar = document.getElementById('correct-bar');
+             const incorrectBar = document.getElementById('incorrect-bar');
+             
+             // 確保動畫在顯示時觸發
+             setTimeout(() => {
+                correctBar.style.width = `${percentage}%`;
+                correctBar.innerText = `${percentage}%`;
+                incorrectBar.style.width = `${100 - percentage}%`;
+                incorrectBar.innerText = `${100 - percentage}%`;
+             }, 100);
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            showQuestion();
+        });
+        
+        restartBtn.addEventListener('click', startQuiz);
+
+        // 頁面載入時自動開始測驗
+        document.addEventListener('DOMContentLoaded', startQuiz);
+
+    </script>
+</body>
+</html>
